@@ -1,0 +1,159 @@
+{% load static %}
+{% static "images" as baseUrl %}
+{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'yash.css' %}">
+
+    <title>BOOKadda sharing books connecting hearts</title>
+</head>
+
+<body>
+    <nav id="mainNavbar" class="navbar navbar-dark navbar-expand-md py-0 fixed-top">
+        <a href="/" class="navbar-brand">BOOKadda</a>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navLinks" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navLinks">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/" class="nav-link">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#my_anchor" class="nav-link">ABOUT</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Accounts/ecopies" class="nav-link">E-copies</a>
+                </li>
+                {% if user.is_authenticated %}
+              
+                <a href="/Accounts/logout" class="nav-link">Logout</a>
+                <a href="/Accounts/profile" class="nav-link">Profile</a>
+                <li> Hello,{{user.username}}!! </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="/Accounts/login" class="nav-link">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Accounts/register" class="nav-link">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <br>
+    <section class="site-section bg-light">
+        <div class="container">
+          <div class="row justify-content-center mb-5">
+            <div class="col-md-7 text-center">
+              <h2>SHARE IT</h2>
+              <p class="lead">SHARE ALL YOUR THOUGHTS AND BOOKS YOU HAVE WITH YOU HERE!!</p>
+            </div>
+        </div>
+        <div class="container">
+            {% for post in posts %}
+                <article class="media content-section">
+                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                    <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+                    <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+                    </div>
+                    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                    <p class="article-content">{{ post.content }}</p>
+                </div>
+                </article>
+            {% endfor %}
+            {% if is_paginated %}
+
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                {% endif %}
+
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="container-fluid px-0">
+        <div class="row align-items-center content">
+            <div class="col-md-6 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-10 col-lg-8 blurb mb-5 mb-md-0">
+                        <h2 id="my_anchor">ABOUT</h2>
+                        
+                        <p class="lead">Bookadda is a book sharing platform, designed for connecting all the book lovers across the nation, created under the minor project lab-2nd year, computer engineering department, JCBUST, YMCA which allows it's users to create their profiles here and to share the details of the books they want to share with other people, details on the other hand can be accessed by other registered users.  </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <img src="{% static 'imgs/pic3.jpeg' %}" height="1730px" width="1730px" alt="" class="img-fluid">
+            </div>
+        </div>
+        <div class="row align-items-center content">
+            <div class="col-md-6 order-2 order-md-1">
+                <img src="{% static 'imgs/pic4.jpg' %}" height="1730px" width="1730px" alt="" class="img-fluid">
+            </div>
+            <div class="col-md-6 text-center order-1 order-md-2">
+                <div class="row justify-content-center">
+                    <div class="col-10 col-lg-8 blurb mb-5 mb-md-0">
+                        <h2>DEVLOPERS</h2>
+                        <img src="{% static 'imgs/passportsize.jpg' %}" height="128px" width="128px" alt="" class="d-none d-lg-inline">
+                        <img src="{% static 'imgs/IMG_0524.jpg' %}" height="128px" width="128px" alt="" class="d-none d-lg-inline">  
+                        <p class="lead"><h4>SUMANT and YASH<h4></p>
+                            This project bookadda have been completed by Sumant gupta, 19001003132 (backend developer) and Yash aggarwal, 19001003144 (frontend developer) under the minor project lab 3rd semester, 2nd year, computer engineering department, JCBUST, YMCA, FARIDABAD under the mentorship of Dr. ANURADHA PILAI and overall coordinated by Dr. SAPNA GAMBHIR.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            $(document).scroll(function () {
+                var $nav = $("#mainNavbar");
+                $nav.toggleClass("scrolled", $(this).scrollTop() > $nav.height());
+            });
+        });
+    </script>
+</body>
+
+</html>
